@@ -44,7 +44,6 @@ const regFailure = () => ({
 
 export const register = (payload) => (dispatch) => {
 	dispatch(regAttempt());
-	console.log(payload);
 	return axios
 		.post('http://localhost:9000/api/user/register', payload)
 		.then((res) => dispatch(regSuccess(res.data)))

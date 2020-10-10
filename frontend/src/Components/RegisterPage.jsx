@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.secondary.main
 	},
 	form: {
-		width: '100%', // Fix IE 11 issue.
+		width: '100%',
 		marginTop: theme.spacing(3)
 	},
 	submit: {
@@ -57,11 +57,18 @@ export default function() {
 				<Typography component="h1" variant="h5">
 					Register
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form
+					className={classes.form}
+					noValidate
+					onSubmit={(event) => {
+						event.preventDefault();
+						dispatch(register({ name, email, password }));
+					}}
+				>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
 							<TextField
-								autoComplete="fname"
+								autoComplete="name"
 								name="firstName"
 								variant="outlined"
 								required
@@ -69,6 +76,7 @@ export default function() {
 								id="firstName"
 								label="First Name"
 								autoFocus
+								onChange={(e) => setName(e.target.value)}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -80,6 +88,7 @@ export default function() {
 								label="Email Address"
 								name="email"
 								autoComplete="email"
+								onChange={(e) => setEmail(e.target.value)}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -92,6 +101,7 @@ export default function() {
 								type="password"
 								id="password"
 								autoComplete="current-password"
+								onChange={(e) => setPassword(e.target.value)}
 							/>
 						</Grid>
 					</Grid>

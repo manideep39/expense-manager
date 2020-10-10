@@ -11,7 +11,7 @@ import {
 const initialState = {
 	loginStatus: false,
 	isLoading: false,
-	isError: false
+	isError: false, 
 	// name
 	// message
 };
@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
 		case REG_ATTEMPT:
 			return { ...state, isLoading: true };
 		case REG_SUCCESS:
-			return { ...state, isLoading: false };
+			return { ...state, isLoading: false, loginStatus: true };
 		case REG_FAILURE:
 			return { ...state, isLoading: false, isError: true };
 		case LOGOUT:
