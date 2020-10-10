@@ -17,7 +17,10 @@ const useStyles = makeStyles((theme) => ({
 	link: {
 		color: 'whitesmoke',
 		textDecoration: 'none'
-	}
+	},
+	navBar: {
+		marginBottom: "50px"
+	}, 
 }));
 
 export default function() {
@@ -26,7 +29,7 @@ export default function() {
 	const loginStatus = useSelector((state) => state.auth.loginStatus);
 
 	return (
-		<AppBar position="static">
+		<AppBar position="static" className={classes.navBar}>
 			<Toolbar>
 				<ButtonGroup className={classes.menuButton}>
 					<Button>
@@ -46,17 +49,25 @@ export default function() {
 					</Button>
 				</ButtonGroup>
 				<ButtonGroup>
-					<Button>
-						<Link to="/register" className={classes.link}>
-							Register
-						</Link>
-					</Button>
-					<Button>
-						<Link to="/login" className={classes.link}>
-							Login
-						</Link>
-					</Button>
-					{loginStatus && <button onClick={() => dispatch(logout())}>Logout</button>}
+					{!loginStatus && (
+						<ButtonGroup>
+							<Button>
+								<Link to="/register" className={classes.link}>
+									Register
+								</Link>
+							</Button>
+							<Button>
+								<Link to="/login" className={classes.link}>
+									Login
+								</Link>
+							</Button>
+						</ButtonGroup>
+					)}
+					{loginStatus && (
+						<Button onClick={() => dispatch(logout())} className={classes.link}>
+							Logout
+						</Button>
+					)}
 				</ButtonGroup>
 			</Toolbar>
 		</AppBar>
