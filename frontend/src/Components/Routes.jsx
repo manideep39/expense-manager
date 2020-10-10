@@ -13,10 +13,10 @@ export default function() {
 	return (
 		<Switch>
 			<PublicRoute component={Home} restricted={false} path="/" exact />
-			<PublicRoute component={RegisterPage} restricted={true} path="/register" exact />
-			<PublicRoute component={LoginPage} restricted={true} path="/login" />
 			<PrivateRoute component={DashBoard} path="/dashboard" exact />
 			<PrivateRoute component={Ledger} path="/ledger" exact />
+			<PublicRoute component={RegisterPage} restricted={true} path="/register" exact />
+			<PublicRoute component={LoginPage} restricted={true} path="/login" />
 		</Switch>
 	);
 }

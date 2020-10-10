@@ -56,7 +56,14 @@ export default function() {
 				<Typography component="h1" variant="h5">
 					Login
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form
+					className={classes.form}
+					noValidate
+					onSubmit={(event) => {
+						event.preventDefault();
+						dispatch(login({ email, password }));
+					}}
+				>
 					<TextField
 						variant="outlined"
 						margin="normal"
@@ -67,6 +74,7 @@ export default function() {
 						name="email"
 						autoComplete="email"
 						autoFocus
+						onChange={(e) => setEmail(e.target.value)}
 					/>
 					<TextField
 						variant="outlined"
@@ -78,15 +86,13 @@ export default function() {
 						type="password"
 						id="password"
 						autoComplete="current-password"
+						onChange={(e) => setPassword(e.target.value)}
 					/>
-					<FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
 					<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
 						Login
 					</Button>
 					<Grid container>
-						<Grid item xs>
-
-						</Grid>
+						<Grid item xs />
 						<Grid item>
 							<Link href="#" variant="body2">
 								{"Don't have an account? Sign Up"}
