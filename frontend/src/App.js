@@ -1,14 +1,19 @@
 import React from 'react';
+
+import Navbar from './Components/Navbar.jsx';
+import Routes from './Components/Routes.jsx';
+import DashBoard from './Components/DashBoard';
+
 import './App.css';
-import DashBoard from './Components/DashBoard'
- 
+
 function App() {
-  return (
-    <div className="App">
-        <h1>DashBoard</h1>
-        <DashBoard/>
-    </div>
-  );
+	return (
+		<div className="App">
+			<Navbar />
+			<Routes />
+			{/* <DashBoard/> */}
+		</div>
+	);
 }
 
 export default App;
