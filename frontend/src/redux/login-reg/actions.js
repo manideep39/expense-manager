@@ -14,8 +14,9 @@ const loginAttempt = () => ({
 	type: LOGIN_ATTEMPT
 });
 
-const loginSuccess = () => ({
-	type: LOGIN_SUCCESS
+const loginSuccess = (payload) => ({
+	type: LOGIN_SUCCESS, 
+	payload
 });
 
 const loginFailure = () => ({
@@ -26,7 +27,7 @@ export const login = (payload) => (dispatch) => {
 	dispatch(loginAttempt());
 	return axios
 		.post('http://localhost:9000/api/user/login', payload)
-		.then((res) => dispatch(loginSuccess()))
+		.then((res) => dispatch(loginSuccess(res.data)))
 		.catch((err) => dispatch(loginFailure()));
 };
 
