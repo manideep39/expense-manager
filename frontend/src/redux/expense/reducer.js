@@ -8,7 +8,7 @@ export default (state = initState, action) => {
         case ADD_EXPENSE:
             return {
                 ...state,
-                data: action.data
+                data: [...state.data,action.data]
             }
         default:
             return state
