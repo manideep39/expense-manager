@@ -11,29 +11,35 @@ import {
 const initialState = {
 	loginStatus: false,
 	isLoading: false,
-	isError: false, 
-	name: "",
-	user_id: ""
+	isError: false,
+	name: '',
+	user_id: '',
+	message: '',
+	validation: ''
 };
 
-export default (state = initialState, action) => {
-	switch (action.type) {
+export default (state = initialState, { type, payload }) => {
+	switch (type) {
 		case LOGIN_ATTEMPT:
-			return { ...state, isLoading: true };
+			return { ...state, isLoading: true, message: '', validation: '' };
 		case LOGIN_SUCCESS: {
-			const { name, user_id } = action.payload;
+			const { name, user_id } = payload;
 			return { ...state, isLoading: false, loginStatus: true, name, user_id };
 		}
-		case LOGIN_FAILURE:
-			return { ...state, isLoading: false, isError: true };
+		case LOGIN_FAILURE: {
+			const { message, validation } = payload;
+			return { ...state, isLoading: false, isError: true, message, validation };
+		}
 		case REG_ATTEMPT:
-			return { ...state, isLoading: true };
+			return { ...state, isLoading: true, message: '', validation: '', isError: false };
 		case REG_SUCCESS:
 			return { ...state, isLoading: false, loginStatus: true };
-		case REG_FAILURE:
-			return { ...state, isLoading: false, isError: true };
+		case REG_FAILURE: {
+			const { validation, message } = payload;
+			return { ...state, isLoading: false, isError: true, validation, message };
+		}
 		case LOGOUT:
-			return { ...state, loginStatus: false };
+			return { ...state, loginStatus: false, message: '', validation: '', user_id: '', name: '' };
 		default:
 			return state;
 	}
