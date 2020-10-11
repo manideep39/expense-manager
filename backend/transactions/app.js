@@ -1,17 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require("cors");
-require('dotenv').config()
+const cors = require('cors');
+require('dotenv').config();
 
-const transactionRoute = require("./routes/transactions");
+const transactionRoute = require('./routes/transactions');
 
 const app = express();
 
 app.use(express.json());
-app.use("/", transactionRoute);
+app.use(cors());
+app.use('/', transactionRoute);
 
 mongoose.connect(
-  process.env.ATLAS_URL,
+	process.env.ATLAS_URL,
 	{
 		useCreateIndex: true,
 		useNewUrlParser: true,
@@ -25,4 +26,3 @@ mongoose.connect(
 app.listen(5000, () => {
 	console.log('The server is up and running');
 });
- 
