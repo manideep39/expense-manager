@@ -1,0 +1,43 @@
+.box{
+    padding:1%;
+    margin:2%;
+    background-color: gold;
+}
+.form>input{
+padding:0.5%;
+margin:0.5%
+}
+.radio{
+    margin:2%;
+    padding:1%
+}
+.btn{
+    padding:1%;
+    margin:1%;
+    background-color: indianred;
+    border: none;
+    outline: none ;
+    width:80px
+}
+.formBox{
+    float:left;
+    margin-left:5%;
+    padding:2%
+}
+.show{
+    background-color: indianred;
+    padding:2%;
+    margin:2%;
+    border-radius:30%;
+    border:none;
+    outline:none;
+    color:white
+}
+.details{
+    display:flex;
+    flex-direction: row;
+}
+.table{
+   float:left
+
+}
