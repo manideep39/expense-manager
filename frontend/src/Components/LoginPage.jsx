@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function() {
 	const dispatch = useDispatch();
-	const isError = useSelector((state) => state.auth.isError);
+	const { isError, message, validation } = useSelector((state) => state.auth);
 
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
@@ -91,23 +91,17 @@ export default function() {
 					<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
 						Login
 					</Button>
-					<Grid container>
-						<Grid item xs />
-						<Grid item>
-							<Link href="#" variant="body2">
-								{"Don't have an account? Sign Up"}
-							</Link>
-						</Grid>
+					<Grid container direction="column">
+						{isError && (
+							<Grid item xs>
+								<Typography variant="subtitle1" component="h3" gutterBottom color="error">
+									{message}
+								</Typography>
+							</Grid>
+						)}
 					</Grid>
 				</form>
 			</div>
 		</Container>
-
-		// <div>
-		// 	<input type="text" onChange={(e) => setEmail(e.target.value)} />
-		// 	<input type="text" onChange={(e) => setPassword(e.target.value)} />
-		// 	<button onClick={() => dispatch(login({ email, password }))}>Login</button>
-		// 	{isError && <h3>Login failed</h3>}
-		// </div>
 	);
 }

@@ -16,6 +16,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function() {
 	const dispatch = useDispatch();
-	const isError = useSelector((state) => state.auth.isError);
+	const { isError, message, validation } = useSelector((state) => state.auth);
 
 	const [ name, setName ] = useState('');
 	const [ email, setEmail ] = useState('');
@@ -78,6 +79,10 @@ export default function() {
 								autoFocus
 								onChange={(e) => setName(e.target.value)}
 							/>
+							{validation &&
+							validation.split(' ')[0] === '"name"' && (
+								<FormHelperText error>{validation}</FormHelperText>
+							)}
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
@@ -90,6 +95,10 @@ export default function() {
 								autoComplete="email"
 								onChange={(e) => setEmail(e.target.value)}
 							/>
+							{validation &&
+							validation.split(' ')[0] === '"email"' && (
+								<FormHelperText error>{validation}</FormHelperText>
+							)}
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
@@ -103,27 +112,26 @@ export default function() {
 								autoComplete="current-password"
 								onChange={(e) => setPassword(e.target.value)}
 							/>
+							{validation &&
+							validation.split(' ')[0] === '"password"' && (
+								<FormHelperText error>{validation}</FormHelperText>
+							)}
 						</Grid>
 					</Grid>
 					<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
 						Register
 					</Button>
 					<Grid container justify="flex-end">
-						<Grid item>
-							<Link href="#" variant="body2">
-								Already have an account? Sign in
-							</Link>
-						</Grid>
+						{isError && (
+							<Grid item xs>
+								<Typography variant="subtitle1" component="h3" gutterBottom color="error">
+									{message}
+								</Typography>
+							</Grid>
+						)}
 					</Grid>
 				</form>
 			</div>
 		</Container>
-		// <div>
-		// 	<input type="text" onChange={(e) => setName(e.target.value)} />
-		// 	<input type="text" onChange={(e) => setEmail(e.target.value)} />
-		// 	<input type="text" onChange={(e) => setPassword(e.target.value)} />
-		// 	<button onClick={() => dispatch(register({ name, email, password }))}>Register</button>
-		// 	{isError && <h3>Registration failed</h3>}
-		// </div>
 	);
 }
