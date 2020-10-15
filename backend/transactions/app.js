@@ -23,6 +23,6 @@ mongoose.connect(
 	}
 );
 
-app.listen(5000, () => {
-	console.log('The server is up and running');
+app.listen(process.env.PORT, () => {
+	console.log(`The server is up and running ${process.env.PORT}`);
 });
