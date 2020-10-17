@@ -90,18 +90,17 @@ export default function DashBoard() {
 	}
 
 	useEffect(() => {
-        setBalance(credit - debit);
-    
+		setBalance(credit - debit);
 	});
 	const handleAdd = (e) => {
 		e.preventDefault();
 		let obj = {
 			title: title,
 			amount: amt,
-            type: value,
-            date:new Date().toLocaleString()
-        };
-        
+			type: value,
+			date: new Date().toLocaleString()
+		};
+
 		dispatch(addExpense(obj));
 		if (value == 'debit') {
 			setDebit((prev) => prev + Number(amt));
@@ -155,7 +154,7 @@ export default function DashBoard() {
 								<Table className={TableClasses.table} aria-label="simple table">
 									<TableHead>
 										<TableRow>
-                                        <TableCell>Date</TableCell>
+											<TableCell>Date</TableCell>
 											<TableCell>Title</TableCell>
 											<TableCell align="right">Type</TableCell>
 											<TableCell align="right">Amount</TableCell>
@@ -167,7 +166,7 @@ export default function DashBoard() {
 												<TableCell component="th" scope="row">
 													{item.date}
 												</TableCell>
-                                                <TableCell align="right">{item.title}</TableCell>
+												<TableCell align="right">{item.title}</TableCell>
 												<TableCell align="right">{item.type}</TableCell>
 												<TableCell align="right">{item.amount}</TableCell>
 											</TableRow>

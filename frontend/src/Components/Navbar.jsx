@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 		textDecoration: 'none'
 	},
 	navBar: {
-		marginBottom: "50px"
+		marginBottom: "20px"
 	}, 
 }));
 
@@ -34,11 +34,6 @@ export default function() {
 				<ButtonGroup className={classes.menuButton}>
 					<Button>
 						<Link to="/" className={classes.link}>
-							Home
-						</Link>
-					</Button>
-					<Button>
-						<Link to="/dashboard" className={classes.link}>
 							Dashboard
 						</Link>
 					</Button>
