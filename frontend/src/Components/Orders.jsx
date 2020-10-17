@@ -1,385 +1,135 @@
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 
-import React,{useEffect} from 'react';
-
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import Button from '@material-ui/core/Button'
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import { useSelector } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Pagination from '@material-ui/lab/Pagination';
 
-
-
-
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
+const useStyles = makeStyles({
+	table: {
+		minWidth: 600
+	},
+	marginBtm: {
+		marginBottom: '10px'
+	},
+	btnCredit: {
+		backgroundColor: '#8bc34a'
+	},
+	btnDebit: {
+		backgroundColor: '#f44336'
+	},
+  btnAll: {
+    backgroundColor: '#03a9f4'
   }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
+});
+
+const StyledTableCell = withStyles((theme) => ({
+	head: {
+		backgroundColor: '#3f51a1',
+		color: theme.palette.common.white
+	},
+	body: {
+		fontSize: 14
+	}
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+	root: {
+		'&:nth-of-type(odd)': {
+			backgroundColor: theme.palette.action.hover
+		}
+	}
+}))(TableRow);
+
+export default function(props) {
+	const classes = useStyles();
+	const [ newData, setNewData ] = React.useState([]);
+
+	const auth = useSelector((state) => state.auth);
+
+	const getAllTransactions = () => {
+		axios.get(`http://localhost:5000/transactions/${auth['user_id']}`).then((res) => {
+			setNewData(res.data.current);
+		});
+	};
+
+	useEffect(() => {
+		getAllTransactions();
+	}, []);
+
+	const handleDebit = async () => {
+		axios
+			.post(`http://localhost:5000/transactions/type`, { type: 'debit', id: auth['user_id'] })
+			.then((res) => setNewData(res.data));
+	};
+	const handleCredit = () => {
+		axios
+			.post(`http://localhost:5000/transactions/type`, { type: 'credit', id: auth['user_id'] })
+			.then((res) => setNewData(res.data));
+	};
+	const handleAll = () => {
+		axios
+			.post(`http://localhost:5000/transactions/type`, { type: 'all', id: auth['user_id'] })
+			.then((res) => setNewData(res.data));
+	};
+
+	return (
+		<Grid container direction="column">
+			<Grid item container direction="row" className={classes.marginBtm}>
+				<Grid item sm={1} />
+				<Grid item sm={3}>
+					<Button onClick={handleDebit} variant="contained" className={classes.btnCredit}>
+						Debit
+					</Button>
+				</Grid>
+				<Grid item sm={4}>
+					<Button onClick={handleCredit} variant="contained" className={classes.btnDebit}>
+						Credit
+					</Button>
+				</Grid>
+				<Grid item sm={3}>
+					<Button onClick={handleAll} variant="contained" className={classes.btnAll}>
+						Show All
+					</Button>
+				</Grid>
+				<Grid item sm={1} />
+			</Grid>
+			<Grid item>
+				<TableContainer component={Paper}>
+					<Table className={classes.table} aria-label="simple table">
+						<TableHead>
+							<TableRow>
+								<StyledTableCell>Time</StyledTableCell>
+								<StyledTableCell align="right">Title</StyledTableCell>
+								<StyledTableCell align="right">Type</StyledTableCell>
+								<StyledTableCell align="right">Amount</StyledTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{newData.map((row) => (
+								<StyledTableRow key={row._id}>
+									<StyledTableCell component="th" scope="row">
+										{new Date(`${row.timestamp}`).toUTCString()}
+									</StyledTableCell>
+									<StyledTableCell align="right">{row.title}</StyledTableCell>
+									<StyledTableCell align="right">{row.type}</StyledTableCell>
+									<StyledTableCell align="right">{row.amount}</StyledTableCell>
+								</StyledTableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			</Grid>
+		</Grid>
+	);
 }
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const headCells = [
-  { id: 'date', numeric: false, disablePadding: true, label: 'Date' },
-  { id: 'title', numeric: true, disablePadding: false, label: 'Title' },
-  { id: 'type', numeric: true, disablePadding: false, label: 'Type' },
-  { id: 'amount', numeric: true, disablePadding: false, label: 'Amount ' }
-]
-
-function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all transaction' }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-          className={classes.col}
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: '1 1 100%',
-    color:"#494b4c",
-    fontWeight:"bolder"
-  },
-}));
-
-const EnhancedTableToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { numSelected } = props;
-  const handleDelete=()=>{
-    alert("deleted")
-  }
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-         All Transaction Details
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon onClick={handleDelete} />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    		'& > *': {
-    			margin: theme.spacing(1)
-    		}
-    	},
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-  },
-  table: {
-    minWidth: 750,
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1,
-  },
-  col:{
-    color:"#494b4c",
-    fontWeight:"bolder"
-  },
-
-}));
-
-export default function DataTable() {
-  const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const data1 = useSelector((state) => state.expense.data);
-  const[data,setData] = React.useState(data1)
-  
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = data.map((n) => n.date);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event,date) => {
-    const selectedIndex = selected.indexOf(date);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, date);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-  
-
-  const handleDebit = () => {
-    		let temp = data1.filter((item) => item.type === 'debit');
-    		setData(temp);
-    	};
-    	const handleCredit = () => {
-    		let arr = data1.filter((item) => item.type === 'credit');
-    		setData(arr);
-    	};
-    	const handleAll = () => {
-    		setData(data1);
-        };
- 
-  const isSelected = (date) => selected.indexOf(date) !== -1;
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
-  return (
-    <div className={classes.root}>
-      	<div className={classes.root}>
- 				<Button  onClick={handleDebit} variant="contained" color="primary">
- 					Debit
- 				</Button>
- 				<Button   onClick={handleCredit} variant="contained" color="secondary">
- 					Credit
- 				</Button>
- 				<Button   onClick={handleAll} variant="contained">
- 					Show All
- 				</Button>
- 			</div>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer >
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={data.length}
-            />
-            <TableBody>
-              {stableSort(data, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.date);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.date)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.date}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.date}
-                      </TableCell>
-                      <TableCell align="right">{row.title}</TableCell>
-                      <TableCell align="right">{row.type}</TableCell>
-                      <TableCell align="right">${row.amount}</TableCell>
-                  
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[3, 5, 10]}
-          component="div"
-          count={data1.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </div>
-  );
-}
-
-
-
-
-

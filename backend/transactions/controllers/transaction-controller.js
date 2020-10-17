@@ -87,11 +87,21 @@ const getSummary = async (req, res) => {
 	}
 };
 
+const getDataByType = async (req, res) => {
+	if (req.body.type == 'all') {
+		let credit = await Transaction.find({ user_id: req.body.id });
+		return res.status(200).json(credit);
+	}
+	let credit = await Transaction.find({ user_id: req.body.id, type: req.body.type });
+	res.status(200).json(credit);
+};
+
 module.exports = {
 	getTransactions,
 	getLastFiveTransactions,
 	addTransaction,
 	deleteTransaction,
 	updateTransaction,
-	getSummary
+	getSummary,
+	getDataByType
 };
