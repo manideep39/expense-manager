@@ -90,7 +90,8 @@ export default function DashBoard() {
 	}
 
 	useEffect(() => {
-        setBalance(credit - debit);
+		setBalance(credit - debit);
+		
     
 	});
 	const handleAdd = (e) => {
@@ -98,8 +99,9 @@ export default function DashBoard() {
 		let obj = {
 			title: title,
 			amount: amt,
-            type: value,
-            date:new Date().toLocaleString()
+			type: value,
+			date:new Date().toLocaleString(),
+		
         };
         
 		dispatch(addExpense(obj));

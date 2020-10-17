@@ -19,6 +19,20 @@ margin:0.5%
     outline: none ;
     width:80px
 }
+.link{
+    text-decoration: none;
+    font-weight:bold;
+    color:#2C3E50 ;
+    
+};
+.drawerback{
+    background-color: #F1948A ;
+    border:1px solid black
+}
+.btn>*{
+    margin:1%
+}
+
 .formBox{
     float:left;
     margin-left:5%;
