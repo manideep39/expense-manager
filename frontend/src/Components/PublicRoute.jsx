@@ -6,6 +6,6 @@ export default function({ component: Component, restricted, ...rest }) {
 	const loginStatus = useSelector((state) => state.auth.loginStatus);
 
 	return (
-		<Route {...rest} render={() => (loginStatus && restricted ? <Redirect to="/dashboard" /> : <Component />)} />
+		<Route {...rest} render={() => (loginStatus && restricted ? <Redirect to="/" /> : <Component />)} />
 	);
 }

@@ -15,12 +15,13 @@ const loginAttempt = () => ({
 });
 
 const loginSuccess = (payload) => ({
-	type: LOGIN_SUCCESS, 
+	type: LOGIN_SUCCESS,
 	payload
 });
 
-const loginFailure = () => ({
-	type: LOGIN_FAILURE
+const loginFailure = (payload) => ({
+	type: LOGIN_FAILURE,
+	payload
 });
 
 export const login = (payload) => (dispatch) => {
@@ -28,19 +29,21 @@ export const login = (payload) => (dispatch) => {
 	return axios
 		.post('http://localhost:9000/api/user/login', payload)
 		.then((res) => dispatch(loginSuccess(res.data)))
-		.catch((err) => dispatch(loginFailure()));
+		.catch((err) => dispatch(loginFailure(err.response.data)));
 };
 
 const regAttempt = () => ({
 	type: REG_ATTEMPT
 });
 
-const regSuccess = () => ({
-	type: REG_SUCCESS
+const regSuccess = (payload) => ({
+	type: REG_SUCCESS,
+	payload
 });
 
-const regFailure = () => ({
-	type: REG_FAILURE
+const regFailure = (payload) => ({
+	type: REG_FAILURE,
+	payload
 });
 
 export const register = (payload) => (dispatch) => {
@@ -48,7 +51,7 @@ export const register = (payload) => (dispatch) => {
 	return axios
 		.post('http://localhost:9000/api/user/register', payload)
 		.then((res) => dispatch(regSuccess(res.data)))
-		.catch((err) => dispatch(regFailure()));
+		.catch((err) => dispatch(regFailure(err.response.data)));
 };
 
 export const logout = () => ({

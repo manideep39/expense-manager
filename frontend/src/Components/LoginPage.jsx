@@ -7,11 +7,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -39,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function() {
 	const dispatch = useDispatch();
-	const isError = useSelector((state) => state.auth.isError);
+	const { isError, message } = useSelector((state) => state.auth);
 
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
@@ -91,23 +87,17 @@ export default function() {
 					<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
 						Login
 					</Button>
-					<Grid container>
-						<Grid item xs />
-						<Grid item>
-							<Link href="#" variant="body2">
-								{"Don't have an account? Sign Up"}
-							</Link>
-						</Grid>
+					<Grid container direction="column">
+						{isError && (
+							<Grid item xs>
+								<Typography variant="subtitle1" component="h3" gutterBottom color="error">
+									{message}
+								</Typography>
+							</Grid>
+						)}
 					</Grid>
 				</form>
 			</div>
 		</Container>
-
-		// <div>
-		// 	<input type="text" onChange={(e) => setEmail(e.target.value)} />
-		// 	<input type="text" onChange={(e) => setPassword(e.target.value)} />
-		// 	<button onClick={() => dispatch(login({ email, password }))}>Login</button>
-		// 	{isError && <h3>Login failed</h3>}
-		// </div>
 	);
 }

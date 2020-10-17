@@ -75,10 +75,6 @@ export default function Ledger() {
               </Paper>
             </Grid>
           </Grid>
-          <Box pt={4}>
-
-            <Copyright />
-          </Box>
         </Container>
       </main>
     </div>

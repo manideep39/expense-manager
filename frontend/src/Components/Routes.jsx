@@ -5,15 +5,13 @@ import LoginPage from './LoginPage';
 import PublicRoute from './PublicRoute.jsx';
 import RegisterPage from './RegisterPage';
 import PrivateRoute from './PrivateRoute.jsx';
-import DashBoard from './DashBoard';
 import Ledger from './Ledger';
-import Home from './Home';
+import Dashboard from './dashboard/Dashboard'
 
 export default function() {
 	return (
 		<Switch>
-			<PublicRoute component={Home} restricted={false} path="/" exact />
-			<PrivateRoute component={DashBoard} path="/dashboard" exact />
+			<PrivateRoute component={Dashboard} path="/" exact />
 			<PrivateRoute component={Ledger} path="/ledger" exact />
 			<PublicRoute component={RegisterPage} restricted={true} path="/register" exact />
 			<PublicRoute component={LoginPage} restricted={true} path="/login" />
